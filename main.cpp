@@ -7,19 +7,54 @@
 
 #include <boost/foreach.hpp>
 
+#include <gmpxx.h>
+
 #include <cmath>
 #include <iostream>
-#include <vector>
+#include <string>
+
+#define PRECISION 10
+
+mpf_class mpf_pow(mpf_class base, mpf_class exp) {
+	mpf_class num(base, PRECISION);
+	while(exp > 1) {
+		num *= base;
+		--exp;
+	}
+
+	return num;
+}
 
 int main() {
-	std::cout.precision(300);
-	long double current_value = 0;
-	long double n = 10;
+	std::cout.precision(PRECISION);
 
-	std::vector<long double> pi_store;
+	mpf_class pi(0, PRECISION);
+	mpf_class n(PRECISION, PRECISION);
+	for(mpf_class i(0, PRECISION); i < n; ++i) {
+		//pi += (
+		std::cout << (
+			(mpf_pow(-1, i)/mpf_pow(2, 10 * i)) * (
+				-(mpf_pow(2, 5)/(4 * i + 1)) -
+				1/(4 * i + 3) +
+				mpf_pow(2, 8)/(10 * i + 1) -
+				mpf_pow(2, 6)/(10 * i + 3) -
+				mpf_pow(2, 2)/(10 * i + 5) -
+				mpf_pow(2, 2)/(10 * i + 7) +
+				1/(10 * i + 9)
+			)
+		) << std::endl;
+	}
+	pi = (1/mpf_pow(2, 6)) * pi; 
+	//std::cout << pi << std::endl;
 
-	for(long double i = 0; i < n; ++i) {
-		current_value = (
+
+	std::cout << "//////////////////" << std::endl;
+
+	long double pi_lol = 0;
+	long double n_lol = PRECISION;
+	for(long double i = 0; i < n_lol; ++i) {
+		//pi_lol += (
+		std::cout << (
 			(pow(-1, i)/pow(2, 10 * i)) * (
 				-(pow(2, 5)/(4 * i + 1)) -
 				1/(4 * i + 3) +
@@ -29,16 +64,10 @@ int main() {
 				pow(2, 2)/(10 * i + 7) +
 				1/(10 * i + 9)
 			)
-		);
-
-		pi_store.push_back(current_value);
+		) << std::endl;
 	}
-
-	long double sum = 0;
-	BOOST_FOREACH(long double g, pi_store) {
-		sum += g;
-		std::cout << (1/pow(2, 6)) * sum << std::endl;
-	}
+	pi_lol = (1/pow(2, 6)) * pi_lol; 
+	//std::cout << pi_lol << std::endl;
 
 	return 0;
 }
